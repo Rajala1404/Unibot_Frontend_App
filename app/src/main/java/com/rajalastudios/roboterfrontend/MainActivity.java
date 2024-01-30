@@ -18,9 +18,6 @@ public class MainActivity extends AppCompatActivity {
     String ipAddress = "";
     String port = "";
 
-    File dataFile = new File("data.ludat");
-    File settingsFile = new File("settings.ludat");
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
