@@ -7,27 +7,29 @@
     tools:context=".MainActivity">
 
     <EditText
-        android:id="@+id/editTextNumberSigned"
+        android:id="@+id/ipAddressTextBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:hint="Port"
-        android:inputType="numberSigned"
-        app:layout_constraintBottom_toTopOf="@+id/connect_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/editTextNumberDecimal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:digits="0123456789."
         android:ems="10"
-        android:hint="IP Adress"
+        android:hint="IP Address"
+        android:imeOptions="actionNext"
         android:inputType='number'
-        app:layout_constraintBottom_toTopOf="@+id/editTextNumberSigned"
+        android:nextFocusDown="@+id/portTextBox"
+        app:layout_constraintBottom_toTopOf="@+id/portTextBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <EditText
+        android:id="@+id/portTextBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Port"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/connect_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -36,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="92dp"
-        android:text="Button"
+        android:text="Connect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
