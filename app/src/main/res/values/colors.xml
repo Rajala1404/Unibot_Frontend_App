@@ -2,4 +2,19 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="brand_color">#7B00FF</color>
+
+    <color name="icon">@color/light_icon</color>
+    
+    //Night
+    <color name="dark_background">@color/black</color>
+    <color name="dark_text">@color/white</color>
+    <color name="dark_icon">@color/white</color>
+
+    //Light
+    <color name="light_background">@color/black</color>
+    <color name="light_text">@color/white</color>
+    <color name="light_icon">@color/white</color>
+
 </resources>
