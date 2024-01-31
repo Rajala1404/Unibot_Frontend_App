@@ -3,15 +3,23 @@ package com.rajalastudios.roboterfrontend;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.VideoView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.internal.EdgeToEdgeUtils;
+import com.rajalastudios.roboterfrontend.ui.fragments.ControllerFragment;
+import com.rajalastudios.roboterfrontend.ui.fragments.DisplayFragment;
+import com.rajalastudios.roboterfrontend.ui.fragments.HomeFragment;
+import com.rajalastudios.roboterfrontend.ui.fragments.LogsFragment;
+import com.rajalastudios.roboterfrontend.ui.fragments.SettingsFragment;
 
 import java.io.*;
 import java.util.*;
@@ -28,9 +36,40 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         settings = loadMapFromFile("settings.ludat");
-
         BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
+
         mBottomNavigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
+        mBottomNavigationView.getMenu().findItem(R.id.nav_home).setIcon(R.drawable.round_home_24);
+        loadFragment(new HomeFragment(), true);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                
+                if (itemId == R.id.nav_display) {
+                    setNavBarIconsToDefault();
+                    item.setIcon(R.drawable.round_smart_display_24);
+                    loadFragment(new DisplayFragment(), false);
+                } else if (itemId == R.id.nav_controller) {
+                    setNavBarIconsToDefault();
+                    item.setIcon(R.drawable.round_settings_remote_24);
+                    loadFragment(new ControllerFragment(), false);
+                } else if (itemId == R.id.nav_home) {
+                    setNavBarIconsToDefault();
+                    item.setIcon(R.drawable.round_home_24);
+                    loadFragment(new HomeFragment(), false);
+                } else if (itemId == R.id.nav_logs) {
+                    setNavBarIconsToDefault();
+                    item.setIcon(R.drawable.round_assignment_24);
+                    loadFragment(new LogsFragment(), false);
+                } else if (itemId == R.id.nav_settings) {
+                    setNavBarIconsToDefault();
+                    item.setIcon(R.drawable.round_settings_24);
+                    loadFragment(new SettingsFragment(), false);
+                }
+                return true;
+            }
+        });
 
         //connectButton = findViewById(R.id.connect_button);
         //connectButton.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +80,29 @@ public class MainActivity extends AppCompatActivity {
         //        saveSettings();
         //    }
         //});
+    }
+
+    private void loadFragment(Fragment fragment, boolean isAppInitD) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        if (isAppInitD) {
+            fragmentTransaction.add(R.id.frame_layout, fragment);
+        } else {
+            fragmentTransaction.replace(R.id.frame_layout, fragment);
+        }
+
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
+    }
+
+    private void setNavBarIconsToDefault() {
+        BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
+        mBottomNavigationView.getMenu().findItem(R.id.nav_display).setIcon(R.drawable.outline_smart_display_24);
+        mBottomNavigationView.getMenu().findItem(R.id.nav_controller).setIcon(R.drawable.outline_settings_remote_24);
+        mBottomNavigationView.getMenu().findItem(R.id.nav_home).setIcon(R.drawable.outline_home_24);
+        mBottomNavigationView.getMenu().findItem(R.id.nav_logs).setIcon(R.drawable.outline_assignment_24);
+        mBottomNavigationView.getMenu().findItem(R.id.nav_settings).setIcon(R.drawable.outline_settings_24);
     }
 
     public void saveSettings() {
