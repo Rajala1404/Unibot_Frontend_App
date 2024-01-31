@@ -5,25 +5,30 @@
         android:id="@+id/nav_display"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:icon="@drawable/round_tv_24"
         android:title="Display" />
     <item
         android:id="@+id/nav_controller"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:icon="@drawable/round_settings_remote_24"
         android:title="Controller" />
     <item
         android:id="@+id/nav_home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:icon="@drawable/round_home_24"
         android:title="Home" />
     <item
         android:id="@+id/nav_logs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:icon="@drawable/round_assignment_24"
         android:title="Logs" />
     <item
         android:id="@+id/nav_settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:icon="@drawable/round_settings_24"
         android:title="Settings" />
 </menu>
