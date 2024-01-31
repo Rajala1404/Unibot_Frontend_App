@@ -1,7 +1,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.RoboterFrontend" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor"></item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorPrimary">@color/brand_color</item>
+
+        <item name="android:textColor">@color/text</item>
     </style>
 
     <style name="Theme.RoboterFrontend" parent="Base.Theme.RoboterFrontend" />
+
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/brand_color</item>
+    </style>
 </resources>

@@ -6,19 +6,24 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    app:layout_dodgeInsetEdges="top">
 
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/background" />
+        android:background="?android:colorBackground" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:colorBackground"
+        app:itemIconTint="@color/icon"
+        app:itemTextColor="?android:textColor"
+        app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
         app:menu="@menu/bottom_nav_menu" />
 
 

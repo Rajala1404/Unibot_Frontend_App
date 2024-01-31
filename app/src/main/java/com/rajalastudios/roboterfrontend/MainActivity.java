@@ -1,5 +1,7 @@
 package com.rajalastudios.roboterfrontend;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -7,6 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.internal.EdgeToEdgeUtils;
 
 import java.io.*;
 import java.util.*;
@@ -19,10 +24,13 @@ public class MainActivity extends AppCompatActivity {
     String port = "";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         settings = loadMapFromFile("settings.ludat");
+
+        BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
+        mBottomNavigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
 
         //connectButton = findViewById(R.id.connect_button);
         //connectButton.setOnClickListener(new View.OnClickListener() {

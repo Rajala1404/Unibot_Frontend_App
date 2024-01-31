@@ -5,18 +5,8 @@
 
     <color name="brand_color">#7B00FF</color>
 
-    <color name="icon">@color/dark_icon</color>
-    <color name="background">@color/dark_background</color>
-
-    //Night
-    <color name="dark_background">@color/black</color>
-    <color name="dark_text">@color/white</color>
-    <color name="dark_icon">@color/white</color>
-    <color name="dark_secondary">@color/white</color>
-
-    //Light
-    <color name="light_background">@color/white</color>
-    <color name="light_text">@color/black</color>
-    <color name="light_icon">@color/black</color>
-    <color name="light_secondary">@color/black</color>
+    <color name="status_bar">@android:color/transparent</color>
+    <color name="background">@color/black</color>
+    <color name="text">@color/white</color>
+    <color name="icon">@color/white</color>
 </resources>
