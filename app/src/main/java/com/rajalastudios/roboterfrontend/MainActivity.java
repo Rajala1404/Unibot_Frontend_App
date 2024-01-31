@@ -24,15 +24,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         settings = loadMapFromFile("settings.ludat");
 
-        connectButton = findViewById(R.id.connect_button);
-        connectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Log.d("INFO", "Saving Settings!");
-                saveSettings();
-            }
-        });
+        //connectButton = findViewById(R.id.connect_button);
+        //connectButton.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View view)
+        //    {
+        //        Log.d("INFO", "Saving Settings!");
+        //        saveSettings();
+        //    }
+        //});
     }
 
     public void saveSettings() {
