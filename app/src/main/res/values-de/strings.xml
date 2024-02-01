@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save">Speichern</string>
+    <string name="saved">Gespeichert!</string>
+    <string name="display">Anzeige</string>
+    <string name="controller">Controller</string>
+    <string name="home">Startseite</string>
+    <string name="logs">Logs</string>
+    <string name="settings">Einstellungen</string>
+</resources>
