@@ -8,4 +8,6 @@
     <string name="home">Startseite</string>
     <string name="logs">Logs</string>
     <string name="settings">Einstellungen</string>
+    <string name="ip_address_hint">IP Adresse</string>
+    <string name="port_hint">Port</string>
 </resources>

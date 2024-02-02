@@ -9,4 +9,6 @@
     <color name="background">@color/white</color>
     <color name="text">@color/black</color>
     <color name="icon">@color/black</color>
+    <color name="selected_text">@color/brand_color</color>
+    <color name="cursor_color">@color/brand_color</color>
 </resources>

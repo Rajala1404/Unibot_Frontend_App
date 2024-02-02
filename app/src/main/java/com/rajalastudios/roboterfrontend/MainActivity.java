@@ -8,11 +8,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.VideoView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.rajalastudios.roboterfrontend.ui.fragments.ControllerFragment;
@@ -105,19 +102,19 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigationView.getMenu().findItem(R.id.nav_settings).setIcon(R.drawable.outline_settings_24);
     }
 
-    public void saveSettings() {
-        EditText ipAddressTextBox = (EditText) findViewById(R.id.ipAddressTextBox);
-        EditText portTextBox = (EditText) findViewById(R.id.portTextBox);
-
-        String ipAddressText = ipAddressTextBox.getText().toString();
-        String portText = portTextBox.getText().toString();
-        Log.d("VALUE", "ipAddressText: " + ipAddressText);
-        settings.put("ipAddress", ipAddressText);
-        Log.d("VALUE", "portText: " + portText);
-        settings.put("port", portText);
-        saveMapToFile(settings, "settings.ludat");
-        Log.d("INFO", "Saved Settings!");
-    }
+    //public void saveSettings() {
+    //    EditText ipAddressTextBox = (EditText) findViewById(R.id.sdasadassad);
+    //    EditText portTextBox = (EditText) findViewById(R.id.portTextBoxdaaddas);
+//
+    //    String ipAddressText = ipAddressTextBox.getText().toString();
+    //    String portText = portTextBox.getText().toString();
+    //    Log.d("VALUE", "ipAddressText: " + ipAddressText);
+    //    settings.put("ipAddress", ipAddressText);
+    //    Log.d("VALUE", "portText: " + portText);
+    //    settings.put("port", portText);
+    //    saveMapToFile(settings, "settings.ludat");
+    //    Log.d("INFO", "Saved Settings!");
+    //}
 
     public void saveMapToFile(Map<String, String> map, String fileName) {
         try {
