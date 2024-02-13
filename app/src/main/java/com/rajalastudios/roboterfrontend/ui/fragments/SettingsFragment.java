@@ -25,11 +25,16 @@ public class SettingsFragment extends Fragment {
     private Button saveButton;
 
     private Map<String, String> settings;
+    private MainActivity mainActivity;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        settings = loadMapFromFile("settings.ludat");
+        mainActivity = new MainActivity();
+
+        settings = mainActivity.getSettings();
+
+        //settings = loadMapFromFile("settings.ludat");
 
 
 

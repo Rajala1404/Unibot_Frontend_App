@@ -10,4 +10,6 @@
     <string name="settings">Einstellungen</string>
     <string name="ip_address_hint">IP Adresse</string>
     <string name="port_hint">Port</string>
+    <string name="connected">Verbunden</string>
+    <string name="disconnected">Getrennt</string>
 </resources>

@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
-                
+
                 if (itemId == R.id.nav_display) {
                     setNavBarIconsToDefault();
                     item.setIcon(R.drawable.round_smart_display_24);
@@ -124,5 +124,9 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return map;
+    }
+
+    public Map<String, String> getSettings() {
+        return settings;
     }
 }
