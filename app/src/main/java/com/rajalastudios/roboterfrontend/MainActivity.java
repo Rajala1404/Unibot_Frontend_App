@@ -20,11 +20,17 @@ import com.rajalastudios.roboterfrontend.ui.fragments.LogsFragment;
 import com.rajalastudios.roboterfrontend.ui.fragments.SettingsFragment;
 
 import java.io.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
     private Button connectButton;
     public Map<String, String> settings = new HashMap<>();
+    public Map<String, Boolean> boolCache = new HashMap<>();
 
     String ipAddress = "";
     String port = "";
@@ -68,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        connectForTrust();
     }
 
     public void reloadSettings(Map<String, String> settings){
@@ -95,6 +103,29 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigationView.getMenu().findItem(R.id.nav_home).setIcon(R.drawable.outline_home_24);
         mBottomNavigationView.getMenu().findItem(R.id.nav_logs).setIcon(R.drawable.outline_assignment_24);
         mBottomNavigationView.getMenu().findItem(R.id.nav_settings).setIcon(R.drawable.outline_settings_24);
+    }
+
+    private void sendData(String value) throws IOException {
+        DatagramPacket sendPacket;
+        byte[] sendData;
+        DatagramSocket clientSocket = new DatagramSocket();
+        clientSocket.setSoTimeout(1000);
+        sendData = value.getBytes();
+        sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(ipAddress), Integer.parseInt(port));
+        clientSocket.send(sendPacket);
+    }
+
+    public void connectForTrust() {
+        if (!(ipAddress == null && port == null)) {
+            try {
+                sendData("TRUST");
+                Log.d("INFO", "Successfully Connected");
+                boolCache.put("connected", true);
+            } catch (IOException e) {
+                Log.d("ERROR", "Sending Failed!");
+                boolCache.put("connected", false);
+            }
+        }
     }
 
     //public void saveSettings() {
