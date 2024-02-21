@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 public class HomeFragment extends Fragment {
@@ -33,10 +34,19 @@ public class HomeFragment extends Fragment {
 
         new MainActivity().connectForTrust();
 
+        loadOrGenerateBoolCache();
         booleanCache = loadBoolMapFromFile("boolean_cache.ludat");
 
-        if (booleanCache.get("connected")) {
+        if (!(booleanCache == null)) {
+
+            Log.d("VALUE", String.valueOf(booleanCache.get("connected")));
+        } else {
+            Log.d("INFO", "booleanCache is null");
+        }
+
+        if (!(booleanCache == null) && booleanCache.get("connected")) {
             TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
+            Log.d("VALUE", String.valueOf(booleanCache.get("connected")));
             connectedText.setText(R.string.connected);
         } else {
             TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
@@ -44,6 +54,25 @@ public class HomeFragment extends Fragment {
         }
 
         return view;
+    }
+
+
+    public void loadOrGenerateBoolCache() {
+        try {
+            booleanCache = loadBoolMapFromFile("boolean_cache.ludat");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            booleanCache = new HashMap<>();
+        }
+        if (booleanCache == null) {
+            booleanCache = new HashMap<>();
+            booleanCache.put("connected", false);
+            saveBoolCache();
+        }
+    }
+
+    private void saveBoolCache() {
+        saveBoolMapToFile(booleanCache, "boolean_cache.ludat");
     }
 
     public Map<String, String> loadMapFromFile(String fileName) {
@@ -77,7 +106,7 @@ public class HomeFragment extends Fragment {
 
 
 
-    public void saveBoolMapToFile(Map<String, String> map, String fileName) {
+    public void saveBoolMapToFile(Map<String, Boolean> map, String fileName) {
         try {
             FileOutputStream fileOutputStream = getActivity().openFileOutput(fileName, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);

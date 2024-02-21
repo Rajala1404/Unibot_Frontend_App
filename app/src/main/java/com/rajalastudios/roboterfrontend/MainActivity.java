@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -143,6 +144,21 @@ public class MainActivity extends AppCompatActivity {
     //}
 
 
+
+    public Map<String, Boolean> loadBoolMapFromFile(String fileName) {
+        Map<String, Boolean> map = null;
+        try {
+            FileInputStream fileInputStream = openFileInput(fileName);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            map = (Map<String, Boolean>) objectInputStream.readObject();
+            objectInputStream.close();
+            fileInputStream.close();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
     public Map<String, String> loadMapFromFile(String fileName) {
         Map<String, String> map = null;
         try {
@@ -155,6 +171,18 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return map;
+    }
+
+    public void saveBoolMapToFile(Map<String, Boolean> map, String fileName) {
+        try {
+            FileOutputStream fileOutputStream = openFileOutput(fileName, MODE_PRIVATE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(map);
+            objectOutputStream.close();
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Map<String, String> getSettings() {

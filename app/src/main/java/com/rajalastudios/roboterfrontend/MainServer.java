@@ -1,3 +1,5 @@
+package com.rajalastudios.roboterfrontend;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -42,15 +44,15 @@ public class MainServer {
             return;
         }
 
-        switch (command) {
-            case "IDLE" -> idle(timestamp);
-            case "FORWARD" -> forward(timestamp);
-            case "LEFT" -> left(timestamp);
-            case "RIGHT" -> right(timestamp);
-            case "BACKWARDS" -> backwards(timestamp);
-            case "SAY" -> say(timestamp);
-            default -> System.out.println("[" + timestamp.toString() + "] " + "NOT VALID!");
-        }
+        //switch (command) {
+        //    case "IDLE" -> idle(timestamp);
+        //    case "FORWARD" -> forward(timestamp);
+        //    case "LEFT" -> left(timestamp);
+        //    case "RIGHT" -> right(timestamp);
+        //    case "BACKWARDS" -> backwards(timestamp);
+        //    case "SAY" -> say(timestamp);
+        //    default -> System.out.println("[" + timestamp.toString() + "] " + "NOT VALID!");
+        //}
     }
 
     private void idle(Timestamp timestamp) {
