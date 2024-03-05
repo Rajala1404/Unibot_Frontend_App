@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.sql.Timestamp;
 
 public class MainServer {
-    public static int PORT = 7392;
+    public static int PORT = 6000;
     public static int MAX_BYTES = 4096;
     public String command = "IDLE";
 

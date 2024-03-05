@@ -29,8 +29,9 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        mainActivity = (MainActivity) getActivity();
 
-        settings = loadMapFromFile("settings.ludat");
+        settings = mainActivity.settings;
 
 
 
@@ -72,36 +73,9 @@ public class SettingsFragment extends Fragment {
         settings.put("port", portText);
 
         //Save Settings
-        saveMapToFile(settings, "settings.ludat");
-        new MainActivity().reloadSettings(settings);
+        mainActivity.settings = settings;
+        mainActivity.saveSettings();
 
-
-        Log.d("INFO", "Saved Settings!");
-    }
-
-    public void saveMapToFile(Map<String, String> map, String fileName) {
-        try {
-            FileOutputStream fileOutputStream = getActivity().openFileOutput(fileName, Context.MODE_PRIVATE);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(map);
-            objectOutputStream.close();
-            fileOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Map<String, String> loadMapFromFile(String fileName) {
-        Map<String, String> map = null;
-        try {
-            FileInputStream fileInputStream = getActivity().openFileInput(fileName);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            map = (Map<String, String>) objectInputStream.readObject();
-            objectInputStream.close();
-            fileInputStream.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return map;
+        Log.i("INFO", "Saved Settings!");
     }
 }

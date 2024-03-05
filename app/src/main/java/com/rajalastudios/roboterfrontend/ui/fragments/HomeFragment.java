@@ -29,23 +29,24 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        mainActivity = (MainActivity) getActivity();
 
-        settings = loadMapFromFile("settings.ludat");
+        settings = mainActivity.settings;
 
-        new MainActivity().connectForTrust();
+        mainActivity.connectForTrust();
 
         loadOrGenerateBoolCache();
-        booleanCache = loadBoolMapFromFile("boolean_cache.ludat");
+        booleanCache = mainActivity.boolCache;
 
         if (!(booleanCache == null)) {
-            Log.d("VALUE", String.valueOf(booleanCache.get("connected")));
+            Log.d("DEBUG", "booleanCache(connected) is: " + String.valueOf(booleanCache.get("connected")));
         } else {
-            Log.d("INFO", "booleanCache is null");
+            Log.d("DEBUG", "booleanCache is null");
         }
 
         if (!(booleanCache == null) && booleanCache.get("connected")) {
             TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
-            Log.d("VALUE", String.valueOf(booleanCache.get("connected")));
+            Log.d("DEBUG", "booleanCache(connected) is: " + String.valueOf(booleanCache.get("connected")));
             connectedText.setText(R.string.connected);
         } else {
             TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
@@ -58,7 +59,7 @@ public class HomeFragment extends Fragment {
 
     public void loadOrGenerateBoolCache() {
         try {
-            booleanCache = loadBoolMapFromFile("boolean_cache.ludat");
+            booleanCache = mainActivity.boolCache;
         } catch (NullPointerException e) {
             e.printStackTrace();
             booleanCache = new HashMap<>();
@@ -71,49 +72,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void saveBoolCache() {
-        saveBoolMapToFile(booleanCache, "boolean_cache.ludat");
-    }
-
-    public Map<String, String> loadMapFromFile(String fileName) {
-        Map<String, String> map = null;
-        try {
-            FileInputStream fileInputStream = getActivity().openFileInput(fileName);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            map = (Map<String, String>) objectInputStream.readObject();
-            objectInputStream.close();
-            fileInputStream.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return map;
-    }
-
-
-    public Map<String, Boolean> loadBoolMapFromFile(String fileName) {
-        Map<String, Boolean> map = null;
-        try {
-            FileInputStream fileInputStream = getActivity().openFileInput(fileName);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            map = (Map<String, Boolean>) objectInputStream.readObject();
-            objectInputStream.close();
-            fileInputStream.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return map;
-    }
-
-
-
-    public void saveBoolMapToFile(Map<String, Boolean> map, String fileName) {
-        try {
-            FileOutputStream fileOutputStream = getActivity().openFileOutput(fileName, Context.MODE_PRIVATE);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(map);
-            objectOutputStream.close();
-            fileOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mainActivity.boolCache = booleanCache;
     }
 }
