@@ -25,6 +25,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.*;
 
@@ -105,20 +106,39 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.i("INFO", "Trying to send...");
                 DatagramPacket sendPacket;
                 DatagramSocket clientSocket = null;
+                Boolean success = false;
                 byte[] sendData;
                 try {
                     clientSocket = new DatagramSocket();
                     clientSocket.setSoTimeout(1000);
                     sendData = value.getBytes();
-                    sendPacket = new DatagramPacket(sendData, sendData.length,
-                            InetAddress.getByName(settings.get("ipAddress")),
-                            Integer.parseInt(settings.get("port")));
+                    sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(settings.get("port")));
                     clientSocket.send(sendPacket);
+
+                    clientSocket.setSoTimeout(5000);
+                    byte[] ackBuffer = new byte[1024];
+                    DatagramPacket ackPacket = new DatagramPacket(ackBuffer, ackBuffer.length);
+                    try {
+                        try {
+                            clientSocket.receive(ackPacket);
+                            Log.i("NetworkTask", "ACK received");
+                            success = true;
+                            boolCache.put("connected", true);
+                        } catch (SocketTimeoutException e) {
+                            Log.e("NetworkTask", "Connection Failed: ACK timeout");
+                        }
+                    } catch (Exception e) {
+                        Log.e("NetworkTask", "Error sending data: " + e.getMessage());
+                    }
                 } catch (Exception e) {
                     Log.e("NetworkTask", "Error sending data: " + e.getMessage());
                 } finally {
+                    if (success) {
+                        Log.i("INFO", "Successfully Connected!");
+                    }
                     if (clientSocket != null) {
                         clientSocket.close();
                     }
@@ -131,12 +151,14 @@ public class MainActivity extends AppCompatActivity {
         if (!(settings.get("ipAddress") == null && settings.get("port") == null)) {
             try {
                 sendData("TRUST");
-                Log.d("INFO", "Successfully Connected");
-                boolCache.put("connected", true);
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.d("ERROR", "Sending Failed!");
+                Log.d("ERROR", "Connection Failed!");
                 boolCache.put("connected", false);
+            } finally {
+                if (boolCache.get("connected") == null) {
+                    boolCache.put("connected", false);
+                }
             }
         }
     }
