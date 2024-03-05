@@ -108,8 +108,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendData(String value) throws IOException {
         DatagramPacket sendPacket;
+        DatagramSocket clientSocket = null;
         byte[] sendData;
-        DatagramSocket clientSocket = new DatagramSocket();
+        try {
+            clientSocket = new DatagramSocket();
+        } catch (SocketException e) {
+            e.printStackTrace();
+            return;
+        }
         clientSocket.setSoTimeout(1000);
         sendData = value.getBytes();
         sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(ipAddress), Integer.parseInt(port));
