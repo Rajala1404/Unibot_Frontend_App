@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 Boolean success = false;
                 byte[] sendData;
                 try {
-                    clientSocket = new DatagramSocket();
+                    clientSocket = new DatagramSocket(Integer.parseInt(settings.get("port")));
                     clientSocket.setSoTimeout(1000);
                     sendData = value.getBytes();
                     sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(settings.get("port")));
