@@ -38,7 +38,6 @@ public class HomeFragment extends Fragment {
         booleanCache = loadBoolMapFromFile("boolean_cache.ludat");
 
         if (!(booleanCache == null)) {
-
             Log.d("VALUE", String.valueOf(booleanCache.get("connected")));
         } else {
             Log.d("INFO", "booleanCache is null");

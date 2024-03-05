@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             clientSocket = new DatagramSocket();
         } catch (SocketException e) {
             e.printStackTrace();
-            return;
+            throw e;
         }
         clientSocket.setSoTimeout(1000);
         sendData = value.getBytes();
@@ -123,12 +123,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void connectForTrust() {
-        if (!(ipAddress == null && port == null)) {
+        if (!(ipAddress == null && port == null) && !(ipAddress == "" && port == "")) {
             try {
                 sendData("TRUST");
                 Log.d("INFO", "Successfully Connected");
                 boolCache.put("connected", true);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Log.d("ERROR", "Sending Failed!");
                 boolCache.put("connected", false);
             }
