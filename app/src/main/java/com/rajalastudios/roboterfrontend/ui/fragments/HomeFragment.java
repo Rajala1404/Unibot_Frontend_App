@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment {
 
         if (!(booleanCache == null) && booleanCache.get("connected")) {
             TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
-            Log.d("DEBUG", "booleanCache(connected) is: " + String.valueOf(booleanCache.get("connected")));
+            Log.d("DEBUG", "booleanCache(connected) is: " + booleanCache.get("connected"));
             connectedText.setText(R.string.connected);
         } else {
             TextView connectedText = (TextView) view.findViewById(R.id.connection_status);

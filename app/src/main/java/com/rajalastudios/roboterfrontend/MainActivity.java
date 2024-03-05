@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                             success = true;
                             boolCache.put("connected", true);
                         } catch (SocketTimeoutException e) {
+                            boolCache.put("connected", false);
                             Log.e("NetworkTask", "Connection Failed: ACK timeout");
                         }
                     } catch (Exception e) {
@@ -156,9 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("ERROR", "Connection Failed!");
                 boolCache.put("connected", false);
             } finally {
-                if (boolCache.get("connected") == null) {
-                    boolCache.put("connected", false);
-                }
+                boolCache.putIfAbsent("connected", false);
             }
         }
     }
