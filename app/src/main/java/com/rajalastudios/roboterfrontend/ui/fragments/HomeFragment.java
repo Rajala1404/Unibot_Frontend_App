@@ -26,31 +26,24 @@ public class HomeFragment extends Fragment {
     private Map<String, String> settings;
     private Map<String, Boolean> booleanCache;
     private MainActivity mainActivity;
+    private View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
         mainActivity = (MainActivity) getActivity();
+        TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
 
         settings = mainActivity.settings;
 
-        mainActivity.connectForTrust();
-
         loadOrGenerateBoolCache();
         booleanCache = mainActivity.boolCache;
+
+        mainActivity.connectForTrust(connectedText);
 
         if (!(booleanCache == null)) {
             Log.d("DEBUG", "booleanCache(connected) is: " + String.valueOf(booleanCache.get("connected")));
         } else {
             Log.d("DEBUG", "booleanCache is null");
-        }
-
-        if (!(booleanCache == null) && booleanCache.get("connected")) {
-            TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
-            Log.d("DEBUG", "booleanCache(connected) is: " + booleanCache.get("connected"));
-            connectedText.setText(R.string.connected);
-        } else {
-            TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
-            connectedText.setText(R.string.disconnected);
         }
 
         return view;

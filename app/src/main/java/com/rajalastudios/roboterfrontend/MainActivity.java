@@ -1,5 +1,7 @@
 package com.rajalastudios.roboterfrontend;
 
+import static com.google.android.material.internal.ContextUtils.getActivity;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.rajalastudios.roboterfrontend.ui.fragments.ControllerFragment;
@@ -102,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
         saveMapToFile(settings, "settings.ludat");
     }
 
-    private void sendData(final String value) {
-        new Thread(new Runnable() {
+    private void sendData(final String value) throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 Log.i("INFO", "Trying to send...");
@@ -145,10 +148,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-        }).start();
+        });
+        thread.start();
     }
 
-    public void connectForTrust() {
+    public void connectForTrust(TextView connectedText) {
         if (!(settings.get("ipAddress") == null && settings.get("port") == null)) {
             try {
                 sendData("TRUST");
