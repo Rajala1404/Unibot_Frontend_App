@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         saveMapToFile(settings, "settings.ludat");
     }
 
-    private void sendData(final String value) throws InterruptedException {
+    private void sendTrustData(final String value) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -153,9 +153,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void connectForTrust(TextView connectedText) {
-        if (!(settings.get("ipAddress") == null && settings.get("port") == null)) {
+        if (!(settings == null) && !(settings.get("ipAddress") == "" && settings.get("port") == "")) {
             try {
-                sendData("TRUST");
+                sendTrustData("TRUST");
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d("ERROR", "Connection Failed!");
