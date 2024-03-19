@@ -121,18 +121,27 @@ public class MainActivity extends AppCompatActivity {
                     sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(settings.get("port")));
                     clientSocket.send(sendPacket);
 
-                    clientSocket.setSoTimeout(5000);
+                    clientSocket.setSoTimeout(30000);
                     byte[] ackBuffer = new byte[1024];
                     DatagramPacket ackPacket = new DatagramPacket(ackBuffer, ackBuffer.length);
                     try {
                         try {
                             clientSocket.receive(ackPacket);
+                            String ackMessage = new String(ackPacket.getData(),0,ackPacket.getLength());
                             Log.i("NetworkTask", "ACK received");
+                            Log.d("NetworkTask", "ACK MESSAGE IS: " + ackMessage);
+                            if (ackMessage.equals("true")) {
+                                Log.i("NetworkTask", "Trust received");
+                                connectionTest();
+                            } else {
+                                Exception e = new Exception();
+                                throw e;
+                            }
                             success = true;
                             boolCache.put("connected", true);
                         } catch (SocketTimeoutException e) {
                             boolCache.put("connected", false);
-                            Log.e("NetworkTask", "Connection Failed: ACK timeout");
+                            Log.e("NetworkTask", "Connection Failed: ACK timeout or Trust was denied");
                         }
                     } catch (Exception e) {
                         Log.e("NetworkTask", "Error sending data: " + e.getMessage());
@@ -141,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("NetworkTask", "Error sending data: " + e.getMessage());
                 } finally {
                     if (success) {
-                        Log.i("INFO", "Successfully Connected!");
+                        Log.i("NetworkTask", "Successfully Connected!");
                     }
                     if (clientSocket != null) {
                         clientSocket.close();
@@ -149,7 +158,67 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        thread.start();
+        if (!(thread.isAlive())) thread.start();
+    }
+
+    private void connectionTest() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("INFO", "Starting Testing Connection");
+                DatagramPacket sendPacket;
+                DatagramSocket clientSocket = null;
+                Boolean success = false;
+                String value = "CONNECTED";
+                Integer fails = 0;
+                byte[] sendData;
+                try {
+                    clientSocket = new DatagramSocket(Integer.parseInt(settings.get("port")));
+                    clientSocket.setSoTimeout(1000);
+                    sendData = value.getBytes();
+                    sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(settings.get("port")));
+                    clientSocket.send(sendPacket);
+                } catch (Exception e) {
+                    Log.e("NetworkTask", "Connection Failed: " + e.getMessage());
+                }
+
+                try {
+                    clientSocket = new DatagramSocket(Integer.parseInt(settings.get("port"))+1);
+                } catch (Exception e) {
+                    Log.e("NetworkTask", "Connection Failed: " + e.getMessage());
+                }
+                while (true) {
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        Log.e("Thread Sleep", "Thread Interrupted");
+                    }
+                    if (fails >= 3) {
+                        break;
+                    }
+                    try {
+                        clientSocket.setSoTimeout(1000);
+                        sendData = value.getBytes();
+                        sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(settings.get("port")));
+                        clientSocket.send(sendPacket);
+                    } catch (Exception e) {
+                        Log.e("NetworkTask", "Connection Failed: " + e.getMessage());
+                    }
+                    byte[] ackBuffer = new byte[1024];
+                    DatagramPacket ackPacket = new DatagramPacket(ackBuffer, ackBuffer.length);
+                    try {
+                        clientSocket.receive(ackPacket);
+                        boolCache.put("connected", true);
+                    } catch (Exception e) {
+                        boolCache.put("connected", false);
+                        fails++;
+                        Log.e("NetworkTask", "Connection Failed: ACK timeout");
+                    }
+                }
+            }
+
+        });
+        if (!(thread.isAlive())) thread.start();
     }
 
     public void connectForTrust(TextView connectedText) {
