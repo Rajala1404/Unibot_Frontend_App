@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 byte[] sendData;
                 try {
                     clientSocket = new DatagramSocket(Integer.parseInt(settings.get("port")));
+                    clientSocket.setReuseAddress(true);
                     clientSocket.setSoTimeout(1000);
                     sendData = value.getBytes();
                     sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(settings.get("port")));
@@ -152,9 +153,9 @@ public class MainActivity extends AppCompatActivity {
                     if (success) {
                         Log.i("NetworkTask", "Successfully Connected!");
                     }
-                    if (clientSocket != null) {
-                        clientSocket.close();
-                    }
+                }
+                if (clientSocket != null) {
+                    clientSocket.close();
                 }
             }
         });
@@ -174,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 byte[] sendData;
                 try {
                     clientSocket = new DatagramSocket(Integer.parseInt(settings.get("port")));
+                    clientSocket.setReuseAddress(true);
                     clientSocket.setSoTimeout(1000);
                     sendData = value.getBytes();
                     sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(settings.get("port")));
@@ -183,7 +185,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 try {
-                    clientSocket = new DatagramSocket(Integer.parseInt(settings.get("port"))+1);
+                    clientSocket = new DatagramSocket(Integer.parseInt(settings.get("port")));
+                    clientSocket.setReuseAddress(true);
                 } catch (Exception e) {
                     Log.e("NetworkTask", "Connection Failed: " + e.getMessage());
                 }
@@ -194,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("Thread Sleep", "Thread Interrupted");
                     }
                     if (fails >= 3) {
+                        Log.i("NetworkTask", "Closing Socket");
                         break;
                     }
                     try {
@@ -214,6 +218,9 @@ public class MainActivity extends AppCompatActivity {
                         fails++;
                         Log.e("NetworkTask", "Connection Failed: ACK timeout");
                     }
+                }
+                if (!(clientSocket == null)) {
+                    clientSocket.close();
                 }
             }
 
