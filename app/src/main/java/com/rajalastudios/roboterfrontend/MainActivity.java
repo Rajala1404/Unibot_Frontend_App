@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
     public Map<String, String> settings = new HashMap<>();
     public Map<String, Boolean> boolCache = new HashMap<>();
 
+    public int portFirstAck = 6001;
+    public int portAckConnected = 6002;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,16 +115,17 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("INFO", "Trying to send...");
                 DatagramPacket sendPacket;
                 DatagramSocket clientSocket = null;
-                Boolean success = false;
+                boolean success = false;
                 byte[] sendData;
                 try {
-                    clientSocket = new DatagramSocket(Integer.parseInt(settings.get("port")));
-                    clientSocket.setReuseAddress(true);
+                    clientSocket = new DatagramSocket();
                     clientSocket.setSoTimeout(1000);
                     sendData = value.getBytes();
-                    sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(settings.get("port")));
+                    sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(Objects.requireNonNull(settings.get("port"))));
                     clientSocket.send(sendPacket);
+                    if (clientSocket.isBound()) clientSocket.close();
 
+                    clientSocket = new DatagramSocket(portFirstAck);
                     clientSocket.setSoTimeout(30000);
                     byte[] ackBuffer = new byte[1024];
                     DatagramPacket ackPacket = new DatagramPacket(ackBuffer, ackBuffer.length);
@@ -169,30 +173,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("INFO", "Starting Testing Connection");
                 DatagramPacket sendPacket;
                 DatagramSocket clientSocket = null;
-                Boolean success = false;
                 String value = "CONNECTED";
-                Integer fails = 0;
+                int fails = 0;
                 byte[] sendData;
-                try {
-                    clientSocket = new DatagramSocket(Integer.parseInt(settings.get("port")));
-                    clientSocket.setReuseAddress(true);
-                    clientSocket.setSoTimeout(1000);
-                    sendData = value.getBytes();
-                    sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(settings.get("port")));
-                    clientSocket.send(sendPacket);
-                } catch (Exception e) {
-                    Log.e("NetworkTask", "Connection Failed: " + e.getMessage());
-                }
 
-                try {
-                    clientSocket = new DatagramSocket(Integer.parseInt(settings.get("port")));
-                    clientSocket.setReuseAddress(true);
-                } catch (Exception e) {
-                    Log.e("NetworkTask", "Connection Failed: " + e.getMessage());
-                }
+
                 while (true) {
                     try {
-                        Thread.sleep(3000);
+                        Thread.sleep(10000);
                     } catch (InterruptedException e) {
                         Log.e("Thread Sleep", "Thread Interrupted");
                     }
@@ -201,15 +189,27 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                     try {
+                        clientSocket = new DatagramSocket();
+                    } catch (Exception e) {
+                        Log.e("NetworkTask", "Failed to connect: " + e.getMessage());
+                    }
+                    try {
                         clientSocket.setSoTimeout(1000);
                         sendData = value.getBytes();
                         sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(settings.get("port")));
                         clientSocket.send(sendPacket);
                     } catch (Exception e) {
-                        Log.e("NetworkTask", "Connection Failed: " + e.getMessage());
+                        Log.e("NetworkTask/connectionTest", "Connection Failed: " + e.getMessage());
+                    } finally {
+                        if (clientSocket.isBound()) clientSocket.close();
                     }
                     byte[] ackBuffer = new byte[1024];
                     DatagramPacket ackPacket = new DatagramPacket(ackBuffer, ackBuffer.length);
+                    try {
+                        clientSocket = new DatagramSocket(portAckConnected);
+                    } catch (Exception e) {
+                        Log.e("NetworkTask/connectionTest", "Failed to open ACK Listener: ");
+                    }
                     try {
                         clientSocket.receive(ackPacket);
                         boolCache.put("connected", true);
@@ -218,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
                         fails++;
                         Log.e("NetworkTask", "Connection Failed: ACK timeout");
                     }
+                    if (clientSocket.isBound()) clientSocket.close();
                 }
                 if (!(clientSocket == null)) {
                     clientSocket.close();
@@ -229,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void connectForTrust(TextView connectedText) {
-        if (!(settings == null) && !(settings.get("ipAddress") == "" && settings.get("port") == "")) {
+        if (!(settings == null) && !(Objects.equals(settings.get("ipAddress"), "") && Objects.equals(settings.get("port"), ""))) {
             try {
                 sendTrustData("TRUST");
             } catch (Exception e) {
