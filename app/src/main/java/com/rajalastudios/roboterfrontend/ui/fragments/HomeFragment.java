@@ -27,6 +27,7 @@ public class HomeFragment extends Fragment {
     private Map<String, Boolean> booleanCache;
     private MainActivity mainActivity;
     private View view;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -35,10 +36,10 @@ public class HomeFragment extends Fragment {
 
         settings = mainActivity.settings;
 
+        mainActivity.connectForTrust();
+
         loadOrGenerateBoolCache();
         booleanCache = mainActivity.boolCache;
-
-        mainActivity.connectForTrust(connectedText);
 
         if (!(booleanCache == null)) {
             Log.d("DEBUG", "booleanCache(connected) is: " + String.valueOf(booleanCache.get("connected")));
@@ -47,6 +48,33 @@ public class HomeFragment extends Fragment {
         }
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainActivity = (MainActivity) getActivity();
+        if (Boolean.TRUE.equals(mainActivity.boolCache.get("connected"))) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
+                    String disconnectedTranslatable = getString(R.string.connected);
+                    connectedText.setText(disconnectedTranslatable);
+                }
+            });
+            Log.d("HOME_THREAD", "Connected");
+        } else {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
+                    String disconnectedTranslatable = getString(R.string.disconnected);
+                    connectedText.setText(disconnectedTranslatable);
+                }
+            });
+            Log.d("HOME_THREAD", "Disconnected");
+        }
     }
 
 

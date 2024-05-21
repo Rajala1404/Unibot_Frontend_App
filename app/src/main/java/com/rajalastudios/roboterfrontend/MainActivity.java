@@ -1,6 +1,5 @@
 package com.rajalastudios.roboterfrontend;
 
-import static com.google.android.material.internal.ContextUtils.getActivity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,9 +26,7 @@ import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
         mBottomNavigationView.getMenu().findItem(R.id.nav_home).setIcon(R.drawable.round_home_24);
         loadFragment(new HomeFragment(), true);
-        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        mBottomNavigationView.setOnNavigationItemSelectedListener( new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
@@ -108,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         saveMapToFile(settings, "settings.ludat");
     }
 
-    private void sendTrustData(final String value) throws InterruptedException {
+    private void sendTrustData(final String value) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -163,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        if (!(thread.isAlive())) thread.start();
+        if (!(thread.isAlive()) && !(boolCache.get("connected"))) thread.start();
     }
 
     private void connectionTest() {
@@ -229,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
         if (!(thread.isAlive())) thread.start();
     }
 
-    public void connectForTrust(TextView connectedText) {
+    public void connectForTrust() {
         if (!(settings == null) && !(Objects.equals(settings.get("ipAddress"), "") && Objects.equals(settings.get("port"), ""))) {
             try {
                 sendTrustData("TRUST");
