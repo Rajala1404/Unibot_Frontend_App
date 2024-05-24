@@ -146,7 +146,9 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     TextView connectionText = (TextView) findViewById(R.id.connection_status);
-                                    connectionText.setText(getString(R.string.connected));
+                                    if (connectionText != null) {
+                                        connectionText.setText(getString(R.string.connected));
+                                    }
                                 }
                             });
                         } catch (SocketTimeoutException e) {
@@ -155,7 +157,9 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     TextView connectionText = (TextView) findViewById(R.id.connection_status);
-                                    connectionText.setText(getString(R.string.disconnected));
+                                    if (connectionText != null) {
+                                        connectionText.setText(getString(R.string.disconnected));
+                                    }
                                 }
                             });
                             Log.e("NetworkTask", "Connection Failed: ACK timeout or Trust was denied");
@@ -230,7 +234,9 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 TextView connectionText = (TextView) findViewById(R.id.connection_status);
-                                connectionText.setText(getString(R.string.connected));
+                                if (connectionText != null) {
+                                    connectionText.setText(getString(R.string.connected));
+                                }
                             }
                         });
                     } catch (Exception e) {
@@ -239,7 +245,9 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 TextView connectionText = (TextView) findViewById(R.id.connection_status);
-                                connectionText.setText(getString(R.string.disconnected));
+                                if (connectionText != null) {
+                                    connectionText.setText(getString(R.string.disconnected));
+                                }
                             }
                         });
                         fails++;

@@ -12,4 +12,5 @@
     <string name="port_hint">Port</string>
     <string name="connected">Verbunden</string>
     <string name="disconnected">Getrennt</string>
+    <string name="reboot_button_description">Roboter Neustarten</string>
 </resources>
