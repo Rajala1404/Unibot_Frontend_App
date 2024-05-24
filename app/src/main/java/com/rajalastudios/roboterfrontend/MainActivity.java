@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        loadFragment(new HomeFragment(), false);
     }
 
     private void loadFragment(Fragment fragment, boolean isAppInitD) {
@@ -141,8 +142,22 @@ public class MainActivity extends AppCompatActivity {
                             }
                             success = true;
                             boolCache.put("connected", true);
+                            MainActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    TextView connectionText = (TextView) findViewById(R.id.connection_status);
+                                    connectionText.setText(getString(R.string.connected));
+                                }
+                            });
                         } catch (SocketTimeoutException e) {
                             boolCache.put("connected", false);
+                            MainActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    TextView connectionText = (TextView) findViewById(R.id.connection_status);
+                                    connectionText.setText(getString(R.string.disconnected));
+                                }
+                            });
                             Log.e("NetworkTask", "Connection Failed: ACK timeout or Trust was denied");
                         }
                     } catch (Exception e) {
@@ -204,14 +219,29 @@ public class MainActivity extends AppCompatActivity {
                     DatagramPacket ackPacket = new DatagramPacket(ackBuffer, ackBuffer.length);
                     try {
                         clientSocket = new DatagramSocket(portAckConnected);
+                        clientSocket.setSoTimeout(1000);
                     } catch (Exception e) {
                         Log.e("NetworkTask/connectionTest", "Failed to open ACK Listener: ");
                     }
                     try {
                         clientSocket.receive(ackPacket);
                         boolCache.put("connected", true);
+                        MainActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                TextView connectionText = (TextView) findViewById(R.id.connection_status);
+                                connectionText.setText(getString(R.string.connected));
+                            }
+                        });
                     } catch (Exception e) {
                         boolCache.put("connected", false);
+                        MainActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                TextView connectionText = (TextView) findViewById(R.id.connection_status);
+                                connectionText.setText(getString(R.string.disconnected));
+                            }
+                        });
                         fails++;
                         Log.e("NetworkTask", "Connection Failed: ACK timeout");
                     }

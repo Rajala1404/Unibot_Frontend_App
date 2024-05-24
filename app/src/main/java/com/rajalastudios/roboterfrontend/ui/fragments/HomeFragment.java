@@ -50,32 +50,32 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mainActivity = (MainActivity) getActivity();
-        if (Boolean.TRUE.equals(mainActivity.boolCache.get("connected"))) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
-                    String disconnectedTranslatable = getString(R.string.connected);
-                    connectedText.setText(disconnectedTranslatable);
-                }
-            });
-            Log.d("HOME_THREAD", "Connected");
-        } else {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
-                    String disconnectedTranslatable = getString(R.string.disconnected);
-                    connectedText.setText(disconnectedTranslatable);
-                }
-            });
-            Log.d("HOME_THREAD", "Disconnected");
-        }
-    }
+   //@Override
+   //public void onResume() {
+   //    super.onResume();
+   //    mainActivity = (MainActivity) getActivity();
+   //    if (Boolean.TRUE.equals(mainActivity.boolCache.get("connected"))) {
+   //        getActivity().runOnUiThread(new Runnable() {
+   //            @Override
+   //            public void run() {
+   //                TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
+   //                String disconnectedTranslatable = getString(R.string.connected);
+   //                connectedText.setText(disconnectedTranslatable);
+   //            }
+   //        });
+   //        Log.d("HOME_THREAD", "Connected");
+   //    } else {
+   //        getActivity().runOnUiThread(new Runnable() {
+   //            @Override
+   //            public void run() {
+   //                TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
+   //                String disconnectedTranslatable = getString(R.string.disconnected);
+   //                connectedText.setText(disconnectedTranslatable);
+   //            }
+   //        });
+   //        Log.d("HOME_THREAD", "Disconnected");
+   //    }
+   //}
 
 
     public void loadOrGenerateBoolCache() {
