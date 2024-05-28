@@ -23,6 +23,35 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/turnRightButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="204dp"
+            android:layout_marginEnd="56dp"
+            android:layout_marginBottom="1dp"
+            android:clickable="true"
+            android:contentDescription="@string/turn_right_button_decription"
+            android:src="@drawable/round_power_settings_new_24"
+            app:backgroundTint="@color/brand_color"
+            app:layout_constraintBottom_toTopOf="@+id/joystickView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/turnLeftButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="52dp"
+            android:clickable="true"
+            android:contentDescription="@string/turn_left_button_description"
+            android:src="@drawable/round_power_settings_new_24"
+            app:backgroundTint="@color/brand_color"
+            app:layout_constraintBottom_toTopOf="@+id/joystickView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
         <com.rajalastudios.roboterfrontend.ui.JoystickView
             android:id="@+id/joystickView"
             android:layout_width="301dp"
