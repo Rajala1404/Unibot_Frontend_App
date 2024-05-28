@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.rajalastudios.roboterfrontend.ui.JoystickView;
 import com.rajalastudios.roboterfrontend.ui.fragments.ControllerFragment;
 import com.rajalastudios.roboterfrontend.ui.fragments.DisplayFragment;
 import com.rajalastudios.roboterfrontend.ui.fragments.HomeFragment;
@@ -76,7 +77,25 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         loadFragment(new HomeFragment(), false);
+    }
+
+    public void sendData(String s) {
+        DatagramPacket sendPacket;
+        DatagramSocket clientSocket = null;
+        byte[] sendData;
+        try {
+            clientSocket = new DatagramSocket();
+            clientSocket.setSoTimeout(1000);
+            sendData = s.getBytes();
+            sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(Objects.requireNonNull(settings.get("port"))));
+            clientSocket.send(sendPacket);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assert clientSocket != null;
+        if (clientSocket.isBound()) clientSocket.close();
     }
 
     private void loadFragment(Fragment fragment, boolean isAppInitD) {

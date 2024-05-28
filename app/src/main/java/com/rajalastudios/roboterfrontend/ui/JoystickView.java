@@ -25,6 +25,8 @@ public class JoystickView extends View
     INTERFACES
     */
 
+    // Source: https://github.com/controlwear/virtual-joystick-android
+
 
     /**
      * Interface definition for a callback to be invoked when a
