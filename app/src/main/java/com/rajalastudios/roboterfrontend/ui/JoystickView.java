@@ -16,6 +16,8 @@ import android.view.ViewConfiguration;
 
 import com.rajalastudios.roboterfrontend.R;
 
+// Source: https://github.com/controlwear/virtual-joystick-android
+
 public class JoystickView extends View
         implements
         Runnable {
@@ -24,8 +26,6 @@ public class JoystickView extends View
     /*
     INTERFACES
     */
-
-    // Source: https://github.com/controlwear/virtual-joystick-android
 
 
     /**

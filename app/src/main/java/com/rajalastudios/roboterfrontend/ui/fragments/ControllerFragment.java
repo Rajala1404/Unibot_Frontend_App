@@ -1,5 +1,6 @@
 package com.rajalastudios.roboterfrontend.ui.fragments;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
