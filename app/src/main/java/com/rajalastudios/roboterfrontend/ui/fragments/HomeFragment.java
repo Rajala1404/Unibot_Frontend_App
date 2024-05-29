@@ -26,13 +26,12 @@ public class HomeFragment extends Fragment {
     private Map<String, String> settings;
     private Map<String, Boolean> booleanCache;
     private MainActivity mainActivity;
-    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
         mainActivity = (MainActivity) getActivity();
-        TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
+        TextView connection_status = view.findViewById(R.id.connection_status);
 
         settings = mainActivity.settings;
 
@@ -42,40 +41,16 @@ public class HomeFragment extends Fragment {
         booleanCache = mainActivity.boolCache;
 
         if (!(booleanCache == null)) {
-            Log.d("DEBUG", "booleanCache(connected) is: " + String.valueOf(booleanCache.get("connected")));
+            Log.d("DEBUG", "booleanCache(connected) is: " + booleanCache.get("connected"));
         } else {
             Log.d("DEBUG", "booleanCache is null");
         }
 
+        if (Boolean.TRUE.equals(mainActivity.boolCache.get("connected"))) connection_status.setText(R.string.connected);
+        else if (Boolean.FALSE.equals(mainActivity.boolCache.get("connected"))) connection_status.setText(R.string.disconnected);
+
         return view;
     }
-
-   //@Override
-   //public void onResume() {
-   //    super.onResume();
-   //    mainActivity = (MainActivity) getActivity();
-   //    if (Boolean.TRUE.equals(mainActivity.boolCache.get("connected"))) {
-   //        getActivity().runOnUiThread(new Runnable() {
-   //            @Override
-   //            public void run() {
-   //                TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
-   //                String disconnectedTranslatable = getString(R.string.connected);
-   //                connectedText.setText(disconnectedTranslatable);
-   //            }
-   //        });
-   //        Log.d("HOME_THREAD", "Connected");
-   //    } else {
-   //        getActivity().runOnUiThread(new Runnable() {
-   //            @Override
-   //            public void run() {
-   //                TextView connectedText = (TextView) view.findViewById(R.id.connection_status);
-   //                String disconnectedTranslatable = getString(R.string.disconnected);
-   //                connectedText.setText(disconnectedTranslatable);
-   //            }
-   //        });
-   //        Log.d("HOME_THREAD", "Disconnected");
-   //    }
-   //}
 
 
     public void loadOrGenerateBoolCache() {

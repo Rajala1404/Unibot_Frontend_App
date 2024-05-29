@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rajalastudios.roboterfrontend.MainActivity;
@@ -30,6 +31,11 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
         FloatingActionButton rebootButton = view.findViewById(R.id.rebootButton);
         FloatingActionButton turnLeftButton = view.findViewById(R.id.turnLeftButton);
         FloatingActionButton turnRightButton = view.findViewById(R.id.turnRightButton);
+
+        TextView connection_status = view.findViewById(R.id.connection_status);
+
+        if (Boolean.TRUE.equals(mainActivity.boolCache.get("connected"))) connection_status.setText(R.string.connected);
+        else if (Boolean.FALSE.equals(mainActivity.boolCache.get("connected"))) connection_status.setText(R.string.disconnected);
 
         rebootButton.setOnClickListener(this);
         turnLeftButton.setOnClickListener(this);

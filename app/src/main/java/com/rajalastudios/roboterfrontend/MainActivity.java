@@ -38,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     public int portFirstAck = 6001;
     public int portAckConnected = 6002;
 
+    private boolean sendTrustData_lock = false;
+    private boolean connectionTest_lock = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                sendTrustData_lock = true;
                 Log.i("INFO", "Trying to send...");
                 DatagramPacket sendPacket;
                 DatagramSocket clientSocket = null;
@@ -202,15 +206,17 @@ public class MainActivity extends AppCompatActivity {
                 if (clientSocket != null) {
                     clientSocket.close();
                 }
+                sendTrustData_lock = false;
             }
         });
-        if (!(thread.isAlive()) && !(boolCache.get("connected"))) thread.start();
+        if (!(thread.isAlive()) && Boolean.FALSE.equals(boolCache.get("connected")) && !sendTrustData_lock) thread.start();
     }
 
     private void connectionTest() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                connectionTest_lock = true;
                 Log.i("INFO", "Starting Testing Connection");
                 DatagramPacket sendPacket;
                 DatagramSocket clientSocket = null;
@@ -279,14 +285,13 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("NetworkTask", "Connection Failed: ACK timeout");
                     }
                     if (clientSocket.isBound()) clientSocket.close();
+                    connectionTest_lock = false;
                 }
-                if (!(clientSocket == null)) {
-                    clientSocket.close();
-                }
+                if (!(clientSocket == null)) clientSocket.close();
             }
 
         });
-        if (!(thread.isAlive())) thread.start();
+        if (!(thread.isAlive()) && !connectionTest_lock) thread.start();
     }
 
     public void connectForTrust() {
