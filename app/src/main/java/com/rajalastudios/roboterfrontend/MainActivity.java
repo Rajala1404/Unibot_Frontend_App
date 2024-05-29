@@ -88,21 +88,23 @@ public class MainActivity extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                DatagramPacket sendPacket;
-                DatagramSocket clientSocket = null;
-                byte[] sendData;
-                try {
-                    Log.d("MainActivity.sendData", "Trying to send: " + s);
-                    clientSocket = new DatagramSocket();
-                    clientSocket.setSoTimeout(1000);
-                    sendData = s.getBytes();
-                    sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(Objects.requireNonNull(settings.get("port"))));
-                    clientSocket.send(sendPacket);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (Boolean.TRUE.equals(boolCache.get("connected"))) {
+                    DatagramPacket sendPacket;
+                    DatagramSocket clientSocket = null;
+                    byte[] sendData;
+                    try {
+                        Log.d("MainActivity.sendData", "Trying to send: " + s);
+                        clientSocket = new DatagramSocket();
+                        clientSocket.setSoTimeout(1000);
+                        sendData = s.getBytes();
+                        sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(Objects.requireNonNull(settings.get("port"))));
+                        clientSocket.send(sendPacket);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    assert clientSocket != null;
+                    if (clientSocket.isBound()) clientSocket.close();
                 }
-                assert clientSocket != null;
-                if (clientSocket.isBound()) clientSocket.close();
             }
         });
         thread.start();

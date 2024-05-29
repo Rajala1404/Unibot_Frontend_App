@@ -46,7 +46,7 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
 
 
         // Joystick Listener
-        JoystickView joystick = (JoystickView) view.findViewById(R.id.joystickView);
+        JoystickView joystick = view.findViewById(R.id.joystickView);
         joystick.setOnMoveListener(new JoystickView.OnMoveListener() {
             String previousOperation = "MRR";
             @Override
