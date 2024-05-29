@@ -17,6 +17,8 @@ import com.rajalastudios.roboterfrontend.MainActivity;
 import com.rajalastudios.roboterfrontend.R;
 import com.rajalastudios.roboterfrontend.ui.JoystickView;
 
+import java.util.Objects;
+
 public class ControllerFragment extends Fragment implements View.OnClickListener{
 
     private View view;
@@ -46,19 +48,54 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
         // Joystick Listener
         JoystickView joystick = (JoystickView) view.findViewById(R.id.joystickView);
         joystick.setOnMoveListener(new JoystickView.OnMoveListener() {
+            String previousOperation = "MRR";
             @Override
             public void onMove(int angle, int strength) {
-                Log.d("JOYSTICK", "Angle: " + angle);
-                int smoothAngle = 0;
                 if (angle == 0 && strength == 0) mainActivity.sendData("MSS");
-                else if (angle <= 30 || angle >= 335) mainActivity.sendData("MRR");
-                else if (angle < 60) mainActivity.sendData("MFR");
-                else if (angle <= 105) mainActivity.sendData("MFF");
-                else if (angle < 135) mainActivity.sendData("MFL");
-                else if (angle <= 205) mainActivity.sendData("MLL");
-                else if (angle < 250) mainActivity.sendData("MBL");
-                else if (angle <= 295) mainActivity.sendData("MBB");
-                else mainActivity.sendData("MBR");
+                else if (angle <= 30 || angle >= 335) {
+                    if (!Objects.equals(previousOperation, "MRR")) {
+                        mainActivity.sendData("MRR");
+                        previousOperation = "MRR";
+                    }
+                }
+                else if (angle < 60) {
+                }
+                else if (angle <= 105) {
+                    if (!Objects.equals(previousOperation, "MFF")) {
+                        mainActivity.sendData("MFF");
+                        previousOperation = "MFF";
+                    }
+                }
+                else if (angle < 135) {
+                    if (!Objects.equals(previousOperation, "MFL")) {
+                        mainActivity.sendData("MFL");
+                        previousOperation = "MFL";
+                    }
+                }
+                else if (angle <= 205) {
+                    if (!Objects.equals(previousOperation, "MLL")) {
+                        mainActivity.sendData("MLL");
+                        previousOperation = "MLL";
+                    }
+                }
+                else if (angle < 250) {
+                    if (!Objects.equals(previousOperation, "MBL")) {
+                        mainActivity.sendData("MBL");
+                        previousOperation = "MBL";
+                    }
+                }
+                else if (angle <= 295) {
+                    if (!Objects.equals(previousOperation, "MBB")) {
+                        mainActivity.sendData("MBB");
+                        previousOperation = "MBB";
+                    }
+                }
+                else {
+                    if (!Objects.equals(previousOperation, "MBR")) {
+                        mainActivity.sendData("MBR");
+                        previousOperation = "MBR";
+                    }
+                }
             }
         });
 

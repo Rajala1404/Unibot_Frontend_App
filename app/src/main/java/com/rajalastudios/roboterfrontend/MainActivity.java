@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 DatagramSocket clientSocket = null;
                 byte[] sendData;
                 try {
+                    Log.d("MainActivity.sendData", "Trying to send: " + s);
                     clientSocket = new DatagramSocket();
                     clientSocket.setSoTimeout(1000);
                     sendData = s.getBytes();
