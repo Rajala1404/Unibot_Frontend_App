@@ -1,6 +1,5 @@
 package com.rajalastudios.roboterfrontend;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,18 +11,20 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.rajalastudios.roboterfrontend.ui.JoystickView;
 import com.rajalastudios.roboterfrontend.ui.fragments.ControllerFragment;
 import com.rajalastudios.roboterfrontend.ui.fragments.DisplayFragment;
 import com.rajalastudios.roboterfrontend.ui.fragments.HomeFragment;
 import com.rajalastudios.roboterfrontend.ui.fragments.LogsFragment;
 import com.rajalastudios.roboterfrontend.ui.fragments.SettingsFragment;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -31,7 +32,6 @@ import java.net.SocketTimeoutException;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
-    private Button connectButton;
     public Map<String, String> settings = new HashMap<>();
     public Map<String, Boolean> boolCache = new HashMap<>();
 
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        settings = loadMapFromFile("settings.ludat");
+        loadMapFromFile("settings.ludat");
         BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
 
         mBottomNavigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
@@ -125,12 +125,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNavBarIconsToDefault() {
-        BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
+        BottomNavigationView mBottomNavigationView = findViewById(R.id.bottom_nav_view);
         mBottomNavigationView.getMenu().findItem(R.id.nav_display).setIcon(R.drawable.outline_smart_display_24);
         mBottomNavigationView.getMenu().findItem(R.id.nav_controller).setIcon(R.drawable.outline_settings_remote_24);
         mBottomNavigationView.getMenu().findItem(R.id.nav_home).setIcon(R.drawable.outline_home_24);
         mBottomNavigationView.getMenu().findItem(R.id.nav_logs).setIcon(R.drawable.outline_assignment_24);
         mBottomNavigationView.getMenu().findItem(R.id.nav_settings).setIcon(R.drawable.outline_settings_24);
+    }
+
+
+    public void saveMapToFile(Map<String, String> map, String fileName) {
+        try {
+            FileOutputStream fileOutputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(map);
+            objectOutputStream.close();
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Map<String, String> loadMapFromFile(String fileName) {
+        Map<String, String> map = null;
+        try {
+            FileInputStream fileInputStream = openFileInput(fileName);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            map = (Map<String, String>) objectInputStream.readObject();
+            objectInputStream.close();
+            fileInputStream.close();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 
     public void saveSettings(){
@@ -230,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
 
                 while (true) {
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         Log.e("Thread Sleep", "Thread Interrupted");
                     }
@@ -309,31 +336,5 @@ public class MainActivity extends AppCompatActivity {
                 boolCache.putIfAbsent("connected", false);
             }
         }
-    }
-
-    public void saveMapToFile(Map<String, String> map, String fileName) {
-        try {
-            FileOutputStream fileOutputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(map);
-            objectOutputStream.close();
-            fileOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Map<String, String> loadMapFromFile(String fileName) {
-        Map<String, String> map = null;
-        try {
-            FileInputStream fileInputStream = openFileInput(fileName);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            map = (Map<String, String>) objectInputStream.readObject();
-            objectInputStream.close();
-            fileInputStream.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return map;
     }
 }

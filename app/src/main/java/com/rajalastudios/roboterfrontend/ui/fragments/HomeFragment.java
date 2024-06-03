@@ -1,11 +1,9 @@
 package com.rajalastudios.roboterfrontend.ui.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +11,6 @@ import android.widget.TextView;
 
 import com.rajalastudios.roboterfrontend.MainActivity;
 import com.rajalastudios.roboterfrontend.R;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
