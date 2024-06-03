@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.ControllerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -23,6 +21,64 @@
             android:src="@drawable/round_power_settings_new_24"
             app:backgroundTint="@color/brand_color"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/turnRightButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="204dp"
+            android:layout_marginEnd="56dp"
+            android:layout_marginBottom="1dp"
+            android:clickable="true"
+            android:contentDescription="@string/turn_right_button_decription"
+            android:foreground="@drawable/round_rotate_right_24"
+            android:foregroundTint="@color/icon"
+            app:backgroundTint="@color/brand_color"
+            app:layout_constraintBottom_toTopOf="@+id/joystickView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/turnLeftButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="52dp"
+            android:clickable="true"
+            android:contentDescription="@string/turn_left_button_description"
+            android:foreground="@drawable/round_rotate_left_24"
+            android:foregroundTint="@color/icon"
+            app:backgroundTint="@color/brand_color"
+            app:layout_constraintBottom_toTopOf="@+id/joystickView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <com.rajalastudios.roboterfrontend.ui.JoystickView
+            android:id="@+id/joystickView"
+            android:layout_width="301dp"
+            android:layout_height="305dp"
+            app:JV_autoReCenterButton="true"
+            app:JV_backgroundColor="@color/brand_color"
+            app:JV_borderWidth="4dp"
+            app:JV_buttonColor="@color/text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.493"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.607" />
+
+        <TextView
+            android:id="@+id/connection_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/n_a"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

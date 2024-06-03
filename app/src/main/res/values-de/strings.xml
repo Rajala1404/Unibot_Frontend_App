@@ -13,4 +13,7 @@
     <string name="connected">Verbunden</string>
     <string name="disconnected">Getrennt</string>
     <string name="reboot_button_description">Roboter Neustarten</string>
+    <string name="turn_right_button_decription">Rechts rumdrehen</string>
+    <string name="turn_left_button_description">Links rumdrehen</string>
+    <string name="n_a">N/A</string>
 </resources>

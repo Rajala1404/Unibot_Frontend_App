@@ -13,6 +13,9 @@
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="reboot_button_description">Reboot The Roboter</string>
+    <string name="turn_right_button_decription">Turn Right</string>
+    <string name="turn_left_button_description">Turn Left</string>
+    <string name="n_a">N/A</string>
 
 
 </resources>

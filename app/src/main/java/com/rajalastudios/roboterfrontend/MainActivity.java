@@ -1,6 +1,5 @@
 package com.rajalastudios.roboterfrontend;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +11,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -22,7 +20,11 @@ import com.rajalastudios.roboterfrontend.ui.fragments.HomeFragment;
 import com.rajalastudios.roboterfrontend.ui.fragments.LogsFragment;
 import com.rajalastudios.roboterfrontend.ui.fragments.SettingsFragment;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -30,18 +32,20 @@ import java.net.SocketTimeoutException;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
-    private Button connectButton;
     public Map<String, String> settings = new HashMap<>();
     public Map<String, Boolean> boolCache = new HashMap<>();
 
     public int portFirstAck = 6001;
     public int portAckConnected = 6002;
 
+    private boolean sendTrustData_lock = false;
+    private boolean connectionTest_lock = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        settings = loadMapFromFile("settings.ludat");
+        loadMapFromFile("settings.ludat");
         BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
 
         mBottomNavigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
@@ -76,7 +80,34 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         loadFragment(new HomeFragment(), false);
+    }
+
+    public void sendData(String s) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (Boolean.TRUE.equals(boolCache.get("connected"))) {
+                    DatagramPacket sendPacket;
+                    DatagramSocket clientSocket = null;
+                    byte[] sendData;
+                    try {
+                        Log.d("MainActivity.sendData", "Trying to send: " + s);
+                        clientSocket = new DatagramSocket();
+                        clientSocket.setSoTimeout(1000);
+                        sendData = s.getBytes();
+                        sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(settings.get("ipAddress")), Integer.parseInt(Objects.requireNonNull(settings.get("port"))));
+                        clientSocket.send(sendPacket);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    assert clientSocket != null;
+                    if (clientSocket.isBound()) clientSocket.close();
+                }
+            }
+        });
+        thread.start();
     }
 
     private void loadFragment(Fragment fragment, boolean isAppInitD) {
@@ -94,12 +125,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNavBarIconsToDefault() {
-        BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
+        BottomNavigationView mBottomNavigationView = findViewById(R.id.bottom_nav_view);
         mBottomNavigationView.getMenu().findItem(R.id.nav_display).setIcon(R.drawable.outline_smart_display_24);
         mBottomNavigationView.getMenu().findItem(R.id.nav_controller).setIcon(R.drawable.outline_settings_remote_24);
         mBottomNavigationView.getMenu().findItem(R.id.nav_home).setIcon(R.drawable.outline_home_24);
         mBottomNavigationView.getMenu().findItem(R.id.nav_logs).setIcon(R.drawable.outline_assignment_24);
         mBottomNavigationView.getMenu().findItem(R.id.nav_settings).setIcon(R.drawable.outline_settings_24);
+    }
+
+
+    public void saveMapToFile(Map<String, String> map, String fileName) {
+        try {
+            FileOutputStream fileOutputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(map);
+            objectOutputStream.close();
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Map<String, String> loadMapFromFile(String fileName) {
+        Map<String, String> map = null;
+        try {
+            FileInputStream fileInputStream = openFileInput(fileName);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            map = (Map<String, String>) objectInputStream.readObject();
+            objectInputStream.close();
+            fileInputStream.close();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 
     public void saveSettings(){
@@ -110,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                sendTrustData_lock = true;
                 Log.i("INFO", "Trying to send...");
                 DatagramPacket sendPacket;
                 DatagramSocket clientSocket = null;
@@ -177,15 +236,17 @@ public class MainActivity extends AppCompatActivity {
                 if (clientSocket != null) {
                     clientSocket.close();
                 }
+                sendTrustData_lock = false;
             }
         });
-        if (!(thread.isAlive()) && !(boolCache.get("connected"))) thread.start();
+        if (!(thread.isAlive()) && Boolean.FALSE.equals(boolCache.get("connected")) && !sendTrustData_lock) thread.start();
     }
 
     private void connectionTest() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                connectionTest_lock = true;
                 Log.i("INFO", "Starting Testing Connection");
                 DatagramPacket sendPacket;
                 DatagramSocket clientSocket = null;
@@ -196,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
 
                 while (true) {
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         Log.e("Thread Sleep", "Thread Interrupted");
                     }
@@ -254,14 +315,13 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("NetworkTask", "Connection Failed: ACK timeout");
                     }
                     if (clientSocket.isBound()) clientSocket.close();
+                    connectionTest_lock = false;
                 }
-                if (!(clientSocket == null)) {
-                    clientSocket.close();
-                }
+                if (!(clientSocket == null)) clientSocket.close();
             }
 
         });
-        if (!(thread.isAlive())) thread.start();
+        if (!(thread.isAlive()) && !connectionTest_lock) thread.start();
     }
 
     public void connectForTrust() {
@@ -276,31 +336,5 @@ public class MainActivity extends AppCompatActivity {
                 boolCache.putIfAbsent("connected", false);
             }
         }
-    }
-
-    public void saveMapToFile(Map<String, String> map, String fileName) {
-        try {
-            FileOutputStream fileOutputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(map);
-            objectOutputStream.close();
-            fileOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Map<String, String> loadMapFromFile(String fileName) {
-        Map<String, String> map = null;
-        try {
-            FileInputStream fileInputStream = openFileInput(fileName);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            map = (Map<String, String>) objectInputStream.readObject();
-            objectInputStream.close();
-            fileInputStream.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return map;
     }
 }
