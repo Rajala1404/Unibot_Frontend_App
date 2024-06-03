@@ -40,12 +40,6 @@ public class HomeFragment extends Fragment {
         loadOrGenerateBoolCache();
         booleanCache = mainActivity.boolCache;
 
-        if (!(booleanCache == null)) {
-            Log.d("DEBUG", "booleanCache(connected) is: " + booleanCache.get("connected"));
-        } else {
-            Log.d("DEBUG", "booleanCache is null");
-        }
-
         if (Boolean.TRUE.equals(mainActivity.boolCache.get("connected"))) connection_status.setText(R.string.connected);
         else if (Boolean.FALSE.equals(mainActivity.boolCache.get("connected"))) connection_status.setText(R.string.disconnected);
 
