@@ -24,6 +24,10 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
     private View view;
     private MainActivity mainActivity;
 
+
+    private boolean previousMTL = false;
+    private boolean previousMTR = false;
+
     private int previousAngle = 0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +55,11 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
             String previousOperation = "MRR";
             @Override
             public void onMove(int angle, int strength) {
-                if (angle == 0 && strength == 0) mainActivity.sendData("MSS");
+                Log.d("JOYSTICK", "Angle: " + angle);
+                if (angle == 0 && strength == 0) {
+                    mainActivity.sendData("MSS");
+                    previousOperation = "MSS";
+                }
                 else if (angle <= 30 || angle >= 335) {
                     if (!Objects.equals(previousOperation, "MRR")) {
                         mainActivity.sendData("MRR");
@@ -59,6 +67,10 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
                     }
                 }
                 else if (angle < 60) {
+                    if (!Objects.equals(previousOperation, "MFR")) {
+                        mainActivity.sendData("MFR");
+                        previousOperation = "MFR";
+                    }
                 }
                 else if (angle <= 105) {
                     if (!Objects.equals(previousOperation, "MFF")) {
@@ -66,7 +78,13 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
                         previousOperation = "MFF";
                     }
                 }
-                else if (angle < 135) {
+                else if (angle <= 125) {
+                    if (!Objects.equals(previousOperation, "MFF")) {
+                        mainActivity.sendData("MFF");
+                        previousOperation = "MFF";
+                    }
+                }
+                else if (angle < 150) {
                     if (!Objects.equals(previousOperation, "MFL")) {
                         mainActivity.sendData("MFL");
                         previousOperation = "MFL";
@@ -105,9 +123,23 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.turnLeftButton) {
-            mainActivity.sendData("MTL");
+            if (previousMTL) {
+                mainActivity.sendData("MSS");
+                previousMTL = false;
+            } else {
+                mainActivity.sendData("MTL");
+                previousMTL = true;
+            }
         } else if (view.getId() == R.id.turnRightButton) {
-            mainActivity.sendData("MTR");
+            if (previousMTR) {
+                mainActivity.sendData("MSS");
+                previousMTR = false;
+            } else {
+                mainActivity.sendData("MTR");
+                previousMTR = true;
+            }
+        } else if (view.getId() == R.id.rebootButton) {
+            mainActivity.sendData("REBOOT_NOW");
         }
     }
 }
