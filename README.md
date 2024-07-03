@@ -1,2 +1,2 @@
 # unibot Frontend App
-This the Android App (Frontend) to control the Bot form the unibot Project
+This is a example Android App (Frontend) to control the Bot from the [unibot Project](https://github.com/EmilAltmann/unibot)
